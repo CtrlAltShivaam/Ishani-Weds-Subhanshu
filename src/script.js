@@ -28,6 +28,8 @@ document.querySelectorAll('.dress .swatch').forEach((swatch) => {
   const image = getComputedStyle(swatch).backgroundImage;
   if (image && image !== 'none') swatch.classList.add('has-image');
 });
+document.querySelector('#rsvp')?.remove();
+document.querySelector('.nav a[href="#rsvp"]')?.remove();
 const heroArch = document.querySelector('.arch');
 const honorText = heroArch.querySelector('.translation');
 const oldHeroName = heroArch.querySelector('h2');
@@ -147,9 +149,11 @@ const calendar = [
   'LOCATION:Kalyan Mandap, Mahanagar, Lucknow',
   'DESCRIPTION:Wedding Ceremony', 'END:VEVENT', 'END:VCALENDAR',
 ].join('\r\n');
-$('#calendar').href = `data:text/calendar;charset=utf8,${encodeURIComponent(calendar)}`;
+const calendarLink = $('#calendar');
+if (calendarLink) calendarLink.href = `data:text/calendar;charset=utf8,${encodeURIComponent(calendar)}`;
 
-$('#rsvpForm').addEventListener('submit', (event) => {
+const rsvpForm = $('#rsvpForm');
+rsvpForm?.addEventListener('submit', (event) => {
   event.preventDefault();
   const status = $('#formStatus');
   const name = $('#guest').value.trim();
@@ -166,9 +170,10 @@ $('#rsvpForm').addEventListener('submit', (event) => {
   window.open(whatsappUrl, '_blank', 'noopener');
 });
 
-$('#phoneLink').addEventListener('click', (event) => {
+$('#phoneLink')?.addEventListener('click', (event) => {
   event.preventDefault();
   const status = $('#formStatus');
+  if (!status) return;
   status.className = 'status error';
   status.textContent = 'A phone number will be added here when available.';
 });
@@ -178,28 +183,36 @@ if (location.hash === '#not-found' || location.hash === '#empty-state') {
   $(location.hash).hidden = false;
 }
 
-let audio;
+let youtubePlayer;
 let playing = false;
-function startAudio() {
-  if (playing) return;
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return;
-  audio = audio || new AudioContext();
-  const gain = audio.createGain();
-  gain.gain.value = 0.035;
-  gain.connect(audio.destination);
-  [146.83, 220, 293.66].forEach((frequency) => {
-    const oscillator = audio.createOscillator();
-    oscillator.type = 'sine';
-    oscillator.frequency.value = frequency;
-    oscillator.connect(gain);
-    oscillator.start();
+let youtubeReady;
+function loadYouTubeApi() {
+  if (youtubeReady) return youtubeReady;
+  youtubeReady = new Promise((resolve) => {
+    window.onYouTubeIframeAPIReady = resolve;
+    const api = document.createElement('script');
+    api.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(api);
   });
+  return youtubeReady;
+}
+async function startAudio() {
+  await loadYouTubeApi();
+  if (!youtubePlayer) {
+    youtubePlayer = new YT.Player('youtube-player', {
+      videoId: 'reCru4ee3Ec',
+      playerVars: { autoplay: 1, controls: 0, loop: 1, playlist: 'reCru4ee3Ec', playsinline: 1 },
+      events: { onReady: (event) => event.target.playVideo() },
+    });
+  } else {
+    youtubePlayer.playVideo();
+  }
   playing = true;
   $('#music').classList.add('on');
 }
 $('#music').addEventListener('click', () => {
-  if (!audio) { startAudio(); return; }
-  if (playing) { audio.suspend(); playing = false; $('#music').classList.remove('on'); }
-  else { audio.resume(); playing = true; $('#music').classList.add('on'); }
+  if (!youtubePlayer || !playing) { startAudio(); return; }
+  youtubePlayer.pauseVideo();
+  playing = false;
+  $('#music').classList.remove('on');
 });
