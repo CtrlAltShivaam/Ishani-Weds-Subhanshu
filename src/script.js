@@ -1,4 +1,5 @@
 const $ = (selector) => document.querySelector(selector);
+const RSVP_WHATSAPP_NUMBER = '917797179770';
 const cover = $('#cover');
 const menu = $('#nav');
 const menuButton = $('#menuButton');
@@ -59,6 +60,7 @@ const context = canvas.getContext('2d');
 function setupScratch() {
   const bounds = scratchBox.getBoundingClientRect();
   const scale = devicePixelRatio || 1;
+  context.setTransform(1, 0, 0, 1, 0, 0);
   canvas.width = bounds.width * scale;
   canvas.height = bounds.height * scale;
   context.scale(scale, scale);
@@ -69,20 +71,33 @@ function setupScratch() {
   context.textAlign = 'center';
   context.fillText('✦  SCRATCH TO REVEAL  ✦', bounds.width / 2, bounds.height / 2);
   context.globalCompositeOperation = 'destination-out';
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.lineWidth = 46;
 }
 setupScratch();
 let scratching = false;
+let lastPoint = null;
 function scratch(event) {
   if (!scratching) return;
   const bounds = canvas.getBoundingClientRect();
+  const point = { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
   context.beginPath();
-  context.arc(event.clientX - bounds.left, event.clientY - bounds.top, 24, 0, Math.PI * 2);
-  context.fill();
+  if (lastPoint) {
+    context.moveTo(lastPoint.x, lastPoint.y);
+    context.lineTo(point.x, point.y);
+    context.stroke();
+  } else {
+    context.arc(point.x, point.y, context.lineWidth / 2, 0, Math.PI * 2);
+    context.fill();
+  }
+  lastPoint = point;
 }
-canvas.addEventListener('pointerdown', (event) => { scratching = true; canvas.setPointerCapture(event.pointerId); scratch(event); });
-canvas.addEventListener('pointermove', scratch);
-canvas.addEventListener('pointerup', () => { scratching = false; });
-canvas.addEventListener('pointercancel', () => { scratching = false; });
+canvas.addEventListener('pointerdown', (event) => { event.preventDefault(); scratching = true; scratchBox.classList.add('is-scratching'); lastPoint = null; canvas.setPointerCapture(event.pointerId); scratch(event); });
+canvas.addEventListener('pointermove', (event) => { if (scratching) event.preventDefault(); scratch(event); });
+canvas.addEventListener('pointerup', () => { scratching = false; lastPoint = null; });
+canvas.addEventListener('pointercancel', () => { scratching = false; lastPoint = null; });
+addEventListener('resize', setupScratch);
 
 const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
   if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -111,7 +126,8 @@ $('#rsvpForm').addEventListener('submit', (event) => {
   status.className = 'status success';
   status.textContent = `ধন্যবাদ, ${name}। আপনার RSVP প্রস্তুত হয়েছে।`;
   const message = `নমস্কার, আমি ${name}। Ishani ও Subhanshu-র বিবাহে ${people} উপস্থিত থাকব।`;
-  window.open(`mailto:ishani.subhanshu.wedding@gmail.com?subject=Wedding RSVP&body=${encodeURIComponent(message)}`, '_blank');
+  const whatsappUrl = `https://wa.me/${RSVP_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank', 'noopener');
 });
 
 $('#phoneLink').addEventListener('click', (event) => {
