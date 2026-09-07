@@ -297,6 +297,7 @@ async function startAudio() {
         loop: 1,
         playlist: "u2XOyXN1Ppo",
         playsinline: 1,
+        start: 33,
       },
       events: { onReady: (event) => event.target.playVideo() },
     });
