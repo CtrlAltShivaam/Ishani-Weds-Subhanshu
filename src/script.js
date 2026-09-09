@@ -1,5 +1,5 @@
 const $ = (selector) => document.querySelector(selector);
-const RSVP_WHATSAPP_NUMBER = "917797179770";
+const RSVP_WHATSAPP_NUMBER = "+917347825755";
 const englishText = new Map([
   ["আমাদের আনন্দে", "Join our celebration"],
   [
@@ -257,14 +257,6 @@ rsvpForm?.addEventListener("submit", (event) => {
   const message = `Hello, I am ${name}. I will attend Ishani and Subhanshu's wedding with ${people}.`;
   const whatsappUrl = `https://wa.me/${RSVP_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, "_blank", "noopener");
-});
-
-$("#phoneLink")?.addEventListener("click", (event) => {
-  event.preventDefault();
-  const status = $("#formStatus");
-  if (!status) return;
-  status.className = "status error";
-  status.textContent = "A phone number will be added here when available.";
 });
 
 if (location.hash === "#not-found" || location.hash === "#empty-state") {
