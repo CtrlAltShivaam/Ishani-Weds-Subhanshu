@@ -79,6 +79,13 @@ document.querySelectorAll(".dress .swatch").forEach((swatch) => {
 });
 document.querySelector("#rsvp")?.remove();
 document.querySelector('.nav a[href="#rsvp"]')?.remove();
+const contactNumber = RSVP_WHATSAPP_NUMBER.replace(/\D/g, "");
+const contactCall = $("#contactCall");
+const contactWhatsapp = $("#contactWhatsapp");
+if (contactCall) contactCall.href = `tel:+${contactNumber}`;
+if (contactWhatsapp) {
+  contactWhatsapp.href = `https://wa.me/${contactNumber}`;
+}
 const heroArch = document.querySelector(".arch");
 const honorText = heroArch.querySelector(".translation");
 const oldHeroName = heroArch.querySelector("h2");

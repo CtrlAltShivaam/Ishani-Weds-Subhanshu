@@ -589,6 +589,24 @@ h3 {
   background: #fffdf8;
   box-shadow: 0 8px 25px #5e071111;
 }
+.venue-grid {
+  display: grid;
+  gap: 24px;
+  max-width: 920px;
+  margin: 24px auto 0;
+}
+.venue-grid .venue-card {
+  margin: 0;
+}
+@media (min-width: 700px) {
+  .venue-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .venue-grid .venue-card {
+    display: grid;
+    grid-template-rows: 180px 1fr;
+  }
+}
 .map {
   height: 180px;
   width: 100%;
@@ -617,6 +635,68 @@ h3 {
   text-decoration: none;
   font: 10px Marcellus;
   letter-spacing: 0.12em;
+}
+.contact {
+  background: #fffaf2;
+  border-top: 2px solid var(--gold);
+  text-align: center;
+}
+.contact .intro {
+  max-width: 360px;
+  margin: 0 auto;
+}
+.contact-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 420px;
+  margin: 26px auto 0;
+}
+.contact-action {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #fff;
+  font: 11px Marcellus;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  box-shadow: 0 4px 0 #3a211833;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.contact-icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+.contact-action:hover,
+.contact-action:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #3a211833;
+}
+.contact-action:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+.contact-call {
+  background: var(--red);
+  border-color: #720f1c;
+  color: #fff;
+}
+.contact-whatsapp {
+  background: #25d366;
+  border-color: #1da851;
+}
+@media (max-width: 420px) {
+  .contact-actions {
+    grid-template-columns: 1fr;
+  }
 }
 .rsvp {
   background: var(--red);
