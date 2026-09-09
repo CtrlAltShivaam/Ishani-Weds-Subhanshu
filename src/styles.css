@@ -1237,14 +1237,14 @@ h3 {
   display: none;
 }
 .event-card.plaque:nth-child(1) .event-icon {
-  background: url("images/Gaye Holud Icon (Sun & Marigold).png") center/contain
-    no-repeat;
-}
-.event-card.plaque:nth-child(2) .event-icon {
   background: url("images/Mehendi.png") center/contain no-repeat;
 }
-.event-card.plaque:nth-child(3) .event-icon {
+.event-card.plaque:nth-child(2) .event-icon {
   background: url("images/Sitar Tabla.png") center/contain no-repeat;
+}
+.event-card.plaque:nth-child(3) .event-icon {
+  background: url("images/Gaye Holud Icon (Sun & Marigold).png") center/contain
+    no-repeat;
 }
 .event-card.plaque:nth-child(4) .event-icon {
   background: url("images/Wedding.png") center/contain no-repeat;

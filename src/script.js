@@ -9,6 +9,7 @@ const englishText = new Map([
   ["গায়ে হলুদ", "Gaye Holud"],
   ["মেহেন্দি", "Mehendi"],
   ["সংগীত সন্ধ্যা", "Sangeet Evening"],
+  ["সংগীত", "Sangeet"],
   ["শুভ বিবাহ", "Wedding Ceremony"],
   ["Gaye Holud", "Haldi"],
   ["Sangeet Evening", "Sangeet"],
