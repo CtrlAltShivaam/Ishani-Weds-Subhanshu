@@ -150,21 +150,65 @@ const canvas = $("#scratchCanvas");
 const scratchBox = $("#scratch");
 const context = canvas.getContext("2d");
 function setupScratch() {
-  const bounds = scratchBox.getBoundingClientRect();
+  const bounds = canvas.getBoundingClientRect();
   const scale = devicePixelRatio || 1;
   context.setTransform(1, 0, 0, 1, 0, 0);
   canvas.width = bounds.width * scale;
   canvas.height = bounds.height * scale;
   context.scale(scale, scale);
-  context.fillStyle = "#b9a98f";
+  const gold = context.createLinearGradient(0, 0, bounds.width, bounds.height);
+  gold.addColorStop(0, "#fff3ab");
+  gold.addColorStop(0.16, "#dfb332");
+  gold.addColorStop(0.42, "#f7d664");
+  gold.addColorStop(0.66, "#bc890c");
+  gold.addColorStop(1, "#e6b52f");
+  context.fillStyle = gold;
   context.fillRect(0, 0, bounds.width, bounds.height);
-  context.fillStyle = "#efe4c6";
-  context.font = "bold 12px Marcellus";
+  context.fillStyle = "#fff0b9";
+  context.fillRect(0, 0, bounds.width, 3);
+  context.fillRect(0, 0, 3, bounds.height);
+  context.fillStyle = "#8e6f17";
+  context.fillRect(0, bounds.height - 3, bounds.width, 3);
+  context.fillRect(bounds.width - 3, 0, 3, bounds.height);
+  context.fillStyle = "#c0122a";
+  context.globalAlpha = 0.65;
+  for (let x = 15; x < bounds.width - 12; x += 28) {
+    for (let y = 13; y < bounds.height - 10; y += 25) {
+      const offset = Math.floor(y / 25) % 2 ? 9 : 0;
+      context.beginPath();
+      context.arc(
+        x + offset,
+        y,
+        (x + y) % 3 === 0 ? 1.8 : 1.25,
+        0,
+        Math.PI * 2,
+      );
+      context.fill();
+    }
+  }
+  context.globalAlpha = 1;
+  context.fillStyle = "#5e0711";
+  context.font = "600 17px Marcellus, serif";
   context.textAlign = "center";
+  context.fillStyle = "transparent";
   context.fillText(
     "✦  SCRATCH TO REVEAL  ✦",
     bounds.width / 2,
     bounds.height / 2,
+  );
+  context.fillStyle = "#900112";
+  context.font = "600 17px Marcellus, serif";
+  context.fillText(
+    "* SCRATCH HERE *",
+    bounds.width / 2,
+    bounds.height / 2 - 5,
+  );
+  context.fillStyle = "rgba(94, 7, 17, 0.84)";
+  context.font = "14px 'Hind Siliguri', sans-serif";
+  context.fillText(
+    "Use your finger or mouse to reveal the date",
+    bounds.width / 2,
+    bounds.height / 2 + 23,
   );
   context.globalCompositeOperation = "destination-out";
   context.lineCap = "round";
@@ -172,6 +216,9 @@ function setupScratch() {
   context.lineWidth = 46;
 }
 setupScratch();
+document.fonts?.ready.then(() => {
+  if (!scratchBox.classList.contains("is-scratching")) setupScratch();
+});
 let scratching = false;
 let lastPoint = null;
 function scratch(event) {

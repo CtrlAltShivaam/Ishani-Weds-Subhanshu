@@ -389,9 +389,9 @@ h3 {
 }
 .scratch-wrap canvas {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
   z-index: 2;
   cursor: crosshair;
 }
@@ -1730,9 +1730,18 @@ h3 {
   line-height: 1;
 }
 .scratch-wrap {
-  background-color: var(--deep);
-  background-image: radial-gradient(#c9a22745 1.5px, transparent 1.5px);
-  background-size: 18px 18px;
+  background: var(--ivory);
+}
+.scratch-wrap:before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  z-index: 0;
+  background: var(--deep);
+}
+.scratch-wrap .revealed {
+  position: relative;
+  z-index: 1;
 }
 .scratch-wrap .revealed {
   color: #fff8d5;
