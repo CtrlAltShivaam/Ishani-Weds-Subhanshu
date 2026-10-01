@@ -155,8 +155,10 @@ setInterval(updateCountdown, 1000);
 
 const canvas = $("#scratchCanvas");
 const scratchBox = $("#scratch");
-const context = canvas.getContext("2d");
+const context = canvas.getContext("2d", { willReadFrequently: true });
+let cardCleared = false;
 function setupScratch() {
+  if (cardCleared) return;
   const bounds = canvas.getBoundingClientRect();
   const scale = devicePixelRatio || 1;
   context.setTransform(1, 0, 0, 1, 0, 0);
@@ -205,11 +207,7 @@ function setupScratch() {
   );
   context.fillStyle = "#900112";
   context.font = "600 17px Marcellus, serif";
-  context.fillText(
-    "* SCRATCH HERE *",
-    bounds.width / 2,
-    bounds.height / 2 - 5,
-  );
+  context.fillText("* SCRATCH HERE *", bounds.width / 2, bounds.height / 2 - 5);
   context.fillStyle = "rgba(94, 7, 17, 0.84)";
   context.font = "14px 'Hind Siliguri', sans-serif";
   context.fillText(
@@ -228,8 +226,90 @@ document.fonts?.ready.then(() => {
 });
 let scratching = false;
 let lastPoint = null;
+let lastProgressCheck = 0;
+function showScratchConfetti() {
+  const viewportWidth = document.documentElement.clientWidth;
+  const viewportHeight = document.documentElement.clientHeight;
+  const scratchBounds = scratchBox.getBoundingClientRect();
+  const centerX = scratchBounds.left + scratchBounds.width / 2;
+  const centerY = scratchBounds.top + scratchBounds.height / 2;
+  const burst = document.createElement("div");
+  const colors = [
+    "#720f1c",
+    "#d9a928",
+    "#f2d76c",
+    "#fff3c1",
+    "#c65342",
+    "#2f7659",
+  ];
+  burst.className = "scratch-confetti";
+  burst.setAttribute("aria-hidden", "true");
+
+  for (let index = 0; index < 256; index += 1) {
+    const piece = document.createElement("span");
+    const angle = Math.random() * Math.PI * 2;
+    const distance =
+      Math.sqrt(Math.random()) *
+      Math.hypot(viewportWidth, viewportHeight) *
+      0.62;
+    const deltaX = Math.round(Math.cos(angle) * distance);
+    const deltaY = Math.round(
+      Math.sin(angle) * distance + viewportHeight * 0.16,
+    );
+    const spin = Math.round(Math.random() * 900 - 450);
+    piece.className = "scratch-confetti-piece";
+    piece.style.left = `${centerX}px`;
+    piece.style.top = `${centerY}px`;
+    piece.style.backgroundColor = colors[index % colors.length];
+    piece.style.setProperty("--dx", `${deltaX}px`);
+    piece.style.setProperty("--dy", `${deltaY}px`);
+    piece.style.setProperty("--mid-x", `${Math.round(deltaX * 0.65)}px`);
+    piece.style.setProperty(
+      "--mid-y",
+      `${Math.round(deltaY * 0.45 - viewportHeight * 0.12)}px`,
+    );
+    piece.style.setProperty(
+      "--spin",
+      `${spin + Math.round(Math.cos(angle) * 360)}deg`,
+    );
+    piece.style.setProperty("--mid-spin", `${Math.round(spin * 0.7)}deg`);
+    piece.style.setProperty("--duration", `${1200 + Math.random() * 900}ms`);
+    piece.style.setProperty("--delay", `${Math.random() * 100}ms`);
+    piece.style.setProperty("--size", `${5 + Math.random() * 5}px`);
+    burst.appendChild(piece);
+  }
+
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 2400);
+}
+function checkScratchProgress(force = false) {
+  if (cardCleared) return;
+  const now = performance.now();
+  if (!force && now - lastProgressCheck < 80) return;
+  lastProgressCheck = now;
+
+  const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+  const columns = 40;
+  const rows = 24;
+  let clearedSamples = 0;
+  for (let row = 0; row < rows; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      const x = Math.floor(((column + 0.5) * canvas.width) / columns);
+      const y = Math.floor(((row + 0.5) * canvas.height) / rows);
+      if (pixels[(y * canvas.width + x) * 4 + 3] === 0) clearedSamples += 1;
+    }
+  }
+
+  if (clearedSamples / (columns * rows) >= 0.45) {
+    cardCleared = true;
+    scratching = false;
+    lastPoint = null;
+    scratchBox.classList.add("is-cleared");
+    showScratchConfetti();
+  }
+}
 function scratch(event) {
-  if (!scratching) return;
+  if (!scratching || cardCleared) return;
   const bounds = canvas.getBoundingClientRect();
   const point = {
     x: event.clientX - bounds.left,
@@ -245,8 +325,10 @@ function scratch(event) {
     context.fill();
   }
   lastPoint = point;
+  checkScratchProgress();
 }
 canvas.addEventListener("pointerdown", (event) => {
+  if (cardCleared) return;
   event.preventDefault();
   scratching = true;
   scratchBox.classList.add("is-scratching");
@@ -261,10 +343,12 @@ canvas.addEventListener("pointermove", (event) => {
 canvas.addEventListener("pointerup", () => {
   scratching = false;
   lastPoint = null;
+  checkScratchProgress(true);
 });
 canvas.addEventListener("pointercancel", () => {
   scratching = false;
   lastPoint = null;
+  checkScratchProgress(true);
 });
 addEventListener("resize", setupScratch);
 

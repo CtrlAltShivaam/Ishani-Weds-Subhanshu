@@ -1796,6 +1796,52 @@ h3 {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  transition: opacity 350ms ease;
+}
+.scratch-wrap.is-cleared canvas {
+  opacity: 0;
+  pointer-events: none;
+}
+.scratch-confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  pointer-events: none;
+}
+.scratch-confetti-piece {
+  position: absolute;
+  width: var(--size);
+  height: calc(var(--size) + 3px);
+  border-radius: 1px;
+  opacity: 0;
+  animation: scratchConfetti var(--duration) var(--delay)
+    cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes scratchConfetti {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3) rotate(0);
+  }
+  12% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--mid-x)), calc(-50% + var(--mid-y)))
+      rotate(var(--mid-spin));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      rotate(var(--spin));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scratch-confetti-piece {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
 }
 .scratch-wrap.is-scratching .scratch-label {
   opacity: 0;
