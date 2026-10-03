@@ -393,6 +393,7 @@ function renderInvitation(side) {
     url.searchParams.set("side", side);
     history.replaceState(null, "", url);
   }
+  startAudio();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 if (activeSide) renderInvitation(activeSide);
@@ -784,9 +785,14 @@ async function startAudio() {
         playsinline: 1,
         start: 33,
       },
-      events: { onReady: (event) => event.target.playVideo() },
+      events: {
+        onReady: (event) => {
+          event.target.playVideo();
+        },
+      },
     });
   } else {
+    youtubePlayer.seekTo(sharedMusic.start, true);
     youtubePlayer.playVideo();
   }
   playing = true;
