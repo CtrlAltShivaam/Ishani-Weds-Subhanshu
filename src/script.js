@@ -111,7 +111,7 @@ const invitationData = {
     contact: { phone: "+919116812724", whatsapp: "+919116812724" },
     events: [
       {
-        name: "Nani Mukhi Puja",
+        name: "Nani Mukh Puja",
         date: "24 November 2026",
         time: "",
         venue: "",
@@ -457,6 +457,18 @@ $("#openInvite").addEventListener("click", () => {
   setTimeout(() => cover.remove(), 900);
   startAudio();
 });
+
+if (document.readyState === "complete") {
+  startAudio();
+} else {
+  window.addEventListener(
+    "load",
+    () => {
+      startAudio();
+    },
+    { once: true },
+  );
+}
 
 for (let i = 0; i < 20; i += 1) {
   const petal = document.createElement("i");
