@@ -115,7 +115,7 @@ const invitationData = {
         date: "24 November 2026",
         time: "",
         venue: "",
-        address: "592/10, Bangalo Tola, Kharika, Teli Bagh, Lucknow",
+        address: "592/10, Bangali Tola, Kharika, Teli Bagh, Lucknow",
         image: "src/images/NaniMukhi.png",
         theme: "mehendi",
       },
@@ -124,7 +124,7 @@ const invitationData = {
         date: "25 November 2026",
         time: "",
         venue: "",
-        address: "592/10, Bangalo Tola, Kharika, Teli Bagh, Lucknow",
+        address: "592/10, Bangali Tola, Kharika, Teli Bagh, Lucknow",
         image: "src/images/Kalash2.png",
         theme: "sangeet",
       },
@@ -133,7 +133,7 @@ const invitationData = {
         date: "26 November 2026",
         time: "",
         venue: "",
-        address: "592/10, Bangalo Tola, Kharika, Teli Bagh, Lucknow",
+        address: "592/10, Bangali Tola, Kharika, Teli Bagh, Lucknow",
         image: "src/images/Haldi.png",
         theme: "haldi",
       },
@@ -162,7 +162,7 @@ const invitationData = {
         name: "Cocktail",
         date: "27 November 2026",
         time: "",
-        venue: "Purv Sainik Kalyan Nigam",
+        venue: "592/10, Bangali Tola, Kharika, Teli Bagh",
         address: "Lucknow",
         mapUrl: "https://maps.app.goo.gl/9e692tqTbMVGnjTD7?g_st=aw",
         image: "src/images/Cheers.png",
@@ -393,6 +393,8 @@ function renderInvitation(side) {
     url.searchParams.set("side", side);
     history.replaceState(null, "", url);
   }
+  updateHeroDisplay(side);
+  updateInvitationNames(side);
   startAudio();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
@@ -418,16 +420,41 @@ if (contactCall) contactCall.href = `tel:+${contactNumber}`;
 if (contactWhatsapp) {
   contactWhatsapp.href = `https://wa.me/${contactNumber}`;
 }
-const heroArch = document.querySelector(".arch");
-const honorText = heroArch.querySelector(".translation");
-const oldHeroName = heroArch.querySelector("h2");
-const oldFamily = heroArch.querySelector(".family");
-honorText.classList.add("honor-text");
-honorText.textContent =
-  "We request the honour of your gracious presence at the wedding celebration.";
-oldHeroName.outerHTML =
-  '<div class="couple-names"><div class="partner"><h2>Ishani</h2><p>Daughter of <strong>Indrani &amp; Bishwanath Banerjee</strong></p></div><span class="weds">weds</span><div class="partner"><h2>Subhanshu</h2><p>Son of <strong>Beena &amp; Sanjay Banerjee</strong></p></div></div>';
-oldFamily.remove();
+function updateInvitationNames(side = activeSide || "bride") {
+  const order = side === "groom" ? "Subhanshu & Ishani" : "Ishani & Subhanshu";
+  const coverName = document.querySelector(".cover .names");
+  const footerName = document.querySelector(".footer .names");
+  if (coverName) coverName.textContent = order;
+  if (footerName) footerName.textContent = order;
+}
+
+function updateHeroDisplay(side = activeSide || "bride") {
+  const heroArch = document.querySelector(".arch");
+  if (!heroArch) return;
+  const honorText = heroArch.querySelector(".translation");
+  const oldFamily = heroArch.querySelector(".family");
+  if (!honorText) return;
+
+  honorText.classList.add("honor-text");
+  honorText.textContent =
+    "We request the honour of your gracious presence at the wedding celebration.";
+
+  const groomLayout =
+    '<div class="couple-names"><div class="partner"><h2>Subhanshu</h2><p>Son of <strong> Smt Beena &amp; Shri Sanjay Banerjee</strong></p></div><span class="weds">weds</span><div class="partner"><h2>Ishani</h2><p>Daughter of <strong>Smt Indrani &amp; Shri Bishwanath Banerjee</strong></p></div></div>';
+  const brideLayout =
+    '<div class="couple-names"><div class="partner"><h2>Ishani</h2><p>Daughter of <strong>Smt Indrani &amp; Shri Bishwanath Banerjee</strong></p></div><span class="weds">weds</span><div class="partner"><h2>Subhanshu</h2><p>Son of <strong>Smt Beena &amp; Shri Sanjay Banerjee</strong></p></div></div>';
+
+  const currentNames = heroArch.querySelector(".couple-names");
+  if (currentNames) {
+    currentNames.outerHTML = side === "groom" ? groomLayout : brideLayout;
+  } else {
+    const oldHeroName = heroArch.querySelector("h2");
+    if (oldHeroName)
+      oldHeroName.outerHTML = side === "groom" ? groomLayout : brideLayout;
+  }
+
+  if (oldFamily) oldFamily.remove();
+}
 const cover = $("#cover");
 const menu = $("#nav");
 const menuButton = $("#menuButton");
