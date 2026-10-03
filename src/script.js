@@ -1,85 +1,416 @@
 const $ = (selector) => document.querySelector(selector);
-const RSVP_WHATSAPP_NUMBER = "+917347825755";
-const englishText = new Map([
-  ["আমাদের আনন্দে", "Join our celebration"],
-  [
-    "চারটি অনুষ্ঠান, একসঙ্গে অনেক আনন্দ",
-    "Four occasions, one beautiful celebration",
-  ],
-  ["গায়ে হলুদ", "Gaye Holud"],
-  ["মেহেন্দি", "Mehendi"],
-  ["সংগীত সন্ধ্যা", "Sangeet Evening"],
-  ["সংগীত", "Sangeet"],
-  ["শুভ বিবাহ", "Wedding Ceremony"],
-  ["Gaye Holud", "Haldi"],
-  ["Sangeet Evening", "Sangeet"],
-  ["পোশাকের ভাবনা", "Dress Code Inspiration"],
-  [
-    "প্রতিটি অনুষ্ঠানে রঙের সঙ্গে উৎসব করুন",
-    "Celebrate each occasion through color",
-  ],
-  ["আপনাদের অপেক্ষায়", "We look forward to welcoming you"],
-  ["শুভ বিবাহ · Mahanagar, Lucknow", "Wedding Ceremony · Mahanagar, Lucknow"],
-  [
-    "মেহেন্দি ও সংগীত · B-16/1, Kapurthala Road, Lucknow",
-    "Mehendi and Sangeet · B-16/1, Kapurthala Road, Lucknow",
-  ],
-  ["আপনার উপস্থিতি", "Your presence"],
-  ["সাদর আমন্ত্রণ", "You are warmly invited"],
-  [
-    "আপনাদের শুভ উপস্থিতি একান্ত কামনা করি",
-    "Your gracious presence would mean the world to us",
-  ],
-  ["আপনার নাম", "Your name"],
-  ["কতজন আসছেন?", "How many guests?"],
-  ["বর বরণ", "Welcoming the groom"],
-  ["মালাবদল", "Garland exchange"],
-  ["সাত পাক", "Seven sacred rounds"],
-  ["সিঁদুর দান", "Sindoor ceremony"],
-  ["কোনও অনুষ্ঠান নেই", "No events yet"],
-  [
-    "এই আমন্ত্রণে এখন কোনও অনুষ্ঠান যোগ করা হয়নি।",
-    "No events have been added to this invitation yet.",
-  ],
-  ["আমন্ত্রণে ফিরুন", "Return to invitation"],
-  ["পৃষ্ঠা পাওয়া যায়নি", "Page not found"],
-  [
-    "এই আমন্ত্রণের ঠিকানাটি আর সক্রিয় নেই।",
-    "This invitation address is no longer active.",
-  ],
-  [
-    "শুভেচ্ছান্তে · ব্যানার্জী পরিবার",
-    "With warm wishes · The Banerjee family",
-  ],
-  ["ফোন করুন", "Call us"],
-  ["২৬ নভেম্বর ২০২৬ · সকাল ১১টা থেকে", "26 November 2026 · 11 AM onwards"],
-  ["২৫ নভেম্বর ২০২৬ · বিকেল ৩টা", "25 November 2026 · 3 PM"],
-  ["২৫ নভেম্বর ২০২৬ · সন্ধ্যা ৬টা", "25 November 2026 · 6 PM"],
-  ["২৬ নভেম্বর ২০২৬ · সন্ধ্যা ৭টা থেকে", "26 November 2026 · 7 PM onwards"],
-  ["সকাল ১১টা থেকে", "11 AM onwards"],
-  ["বিকেল ৩টা", "3 PM"],
-  ["সন্ধ্যা ৬টা", "6 PM"],
-  ["সন্ধ্যা ৭টা থেকে", "7 PM onwards"],
-  ["৭:০০ PM", "7:00 PM"],
-  ["৮:০০ PM", "8:00 PM"],
-  ["৯:০০ PM", "9:00 PM"],
-  ["১০:০০ PM", "10:00 PM"],
-]);
-document.querySelectorAll("body *").forEach((element) =>
-  element.childNodes.forEach((node) => {
-    if (node.nodeType !== Node.TEXT_NODE) return;
-    englishText.forEach((replacement, original) => {
-      node.textContent = node.textContent.replaceAll(original, replacement);
-    });
-  }),
+const invitationData = {
+  bride: {
+    eventsIntro: "Four occasions, one beautiful celebration",
+    contact: { phone: "+917347825755", whatsapp: "+917347825755" },
+    events: [
+      {
+        name: "Mehendi",
+        date: "25 November 2026",
+        time: "3 PM",
+        venue: "Kapoor's Inn Banquet Hall & Suites",
+        address: "B-16/1, Kapurthala Road, Lucknow",
+        tag: "HENNA HUES",
+        image: "src/images/Mehendi.png",
+        theme: "mehendi",
+      },
+      {
+        name: "Sangeet",
+        date: "25 November 2026",
+        time: "6 PM",
+        venue: "Kapoor's Inn Banquet Hall & Suites",
+        address: "B-16/1, Kapurthala Road, Lucknow",
+        tag: "INDIGO NIGHTS",
+        image: "src/images/Sitar Tabla.png",
+        theme: "sangeet",
+      },
+      {
+        name: "Haldi",
+        date: "26 November 2026",
+        time: "11 AM onwards",
+        venue: "Kalyan Mandap",
+        address: "Mahanagar, Lucknow",
+        tag: "TURMERIC & MARIGOLD",
+        image: "src/images/Haldi.png",
+        theme: "haldi",
+      },
+      {
+        name: "Wedding Ceremony",
+        date: "26 November 2026",
+        time: "7 PM onwards",
+        venue: "Kalyan Mandap",
+        address: "Mahanagar, Lucknow",
+        image: "src/images/Wedding.png",
+        theme: "biye",
+        rituals: [
+          { name: "Welcoming the groom", time: "7:00 PM" },
+          { name: "Garland exchange", time: "8:00 PM" },
+          { name: "Seven sacred rounds", time: "9:00 PM" },
+          { name: "Sindoor ceremony", time: "10:00 PM" },
+        ],
+      },
+    ],
+    dressCode: {
+      enabled: true,
+      items: [
+        {
+          name: "Gaye Holud",
+          palette: "Turmeric & Marigold",
+          mood: "Sunshine shades",
+          swatch: "",
+        },
+        {
+          name: "Mehendi",
+          palette: "Henna Green",
+          mood: "Henna hues",
+          swatch: "green",
+        },
+        {
+          name: "Sangeet",
+          palette: "Indigo Nights",
+          mood: "Peacock glam",
+          swatch: "blue",
+        },
+        {
+          name: "Wedding Ceremony",
+          palette: "Benarasi & Gold",
+          mood: "Lal-paar shada",
+          swatch: "red",
+        },
+      ],
+    },
+    venues: [
+      {
+        name: "Kalyan Mandap",
+        description: "Wedding Ceremony · Mahanagar, Lucknow",
+        address: "Kalyan Mandap Mahanagar Lucknow",
+        mapUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=Kalyan%20Mandap%20Mahanagar%20Lucknow",
+        mapEmbedUrl:
+          "https://maps.google.com/maps?q=Kalyan%20Mandap%20Mahanagar%20Lucknow&output=embed",
+      },
+      {
+        name: "Kapoor's Inn",
+        description: "Mehendi and Sangeet · B-16/1, Kapurthala Road, Lucknow",
+        address: "Kapoor's Inn Banquet Hall Lucknow",
+        mapUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=Kapoor's%20Inn%20Banquet%20Hall%20Lucknow",
+        mapEmbedUrl:
+          "https://maps.google.com/maps?q=Kapoor's%20Inn%20Banquet%20Kapurthala%20Road%20Lucknow&output=embed",
+      },
+    ],
+    countdown: {
+      targetDate: "2026-11-26T19:00:00",
+      displayDate: "26 November 2026",
+      displayTime: "Thursday · 7 PM onwards",
+    },
+    scratchCard: { date: "26 November 2026", time: "Thursday · 7 PM onwards" },
+  },
+  groom: {
+    eventsIntro: "Seven celebrations, one beautiful celebration",
+    contact: { phone: "+919116812724", whatsapp: "+919116812724" },
+    events: [
+      {
+        name: "Nani Mukhi Puja",
+        date: "24 November 2026",
+        time: "",
+        venue: "",
+        address: "592/10, Bangalo Tola, Kharika, Teli Bagh, Lucknow",
+        image: "src/images/NaniMukhi.png",
+        theme: "mehendi",
+      },
+      {
+        name: "Aiburo Bhaat",
+        date: "25 November 2026",
+        time: "",
+        venue: "",
+        address: "592/10, Bangalo Tola, Kharika, Teli Bagh, Lucknow",
+        image: "src/images/Kalash2.png",
+        theme: "sangeet",
+      },
+      {
+        name: "Haldi",
+        date: "26 November 2026",
+        time: "",
+        venue: "",
+        address: "592/10, Bangalo Tola, Kharika, Teli Bagh, Lucknow",
+        image: "src/images/Haldi.png",
+        theme: "haldi",
+      },
+      {
+        name: "Barat",
+        date: "26 November 2026",
+        time: "",
+        venue: "Kalyan Mandapam",
+        address: "",
+        type: "route",
+        from: "Hanuman Mandir, Telibagh",
+        to: "Kalyan Mandapam",
+        image: "src/images/Barat.png",
+        theme: "biye",
+      },
+      {
+        name: "Bidai",
+        date: "27 November 2026",
+        time: "",
+        venue: "Kalyan Mandapam",
+        address: "Mahanagar, Lucknow",
+        image: "src/images/Bidai.png",
+        theme: "biye",
+      },
+      {
+        name: "Cocktail",
+        date: "27 November 2026",
+        time: "",
+        venue: "Purv Sainik Kalyan Nigam",
+        address: "Lucknow",
+        mapUrl: "https://maps.app.goo.gl/9e692tqTbMVGnjTD7?g_st=aw",
+        image: "src/images/Cheers.png",
+        theme: "sangeet",
+      },
+      {
+        name: "Reception",
+        date: "28 November 2026",
+        time: "",
+        venue: "Purv Sainik Kalyan Nigam",
+        address: "Lucknow",
+        mapUrl: "https://maps.app.goo.gl/9e692tqTbMVGnjTD7?g_st=aw",
+        image: "src/images/reception.png",
+        theme: "biye",
+      },
+    ],
+    dressCode: { enabled: false, items: [] },
+    venues: [
+      {
+        name: "Family home",
+        description:
+          "24-26 November · Nani Mukhi Puja, Aiburo Bhaat and morning Haldi",
+        address: "592/10, Bangali Tola, Kharika, Teli Bagh, Lucknow",
+        mapUrl: "https://maps.app.goo.gl/GTfDKJKTTX4D6GJn8",
+        mapEmbedUrl:
+          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d222.60329714843422!2d80.94671058918829!3d26.78734607969964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfb007bed9bb7%3A0xb3a90eb843f00aa6!2sNJS%20durga%20puja!5e0!3m2!1sen!2sin!4v1791032607727!5m2!1sen!2sin",
+      },
+      {
+        name: "Barat Route",
+        description: "26 November",
+        type: "route",
+        from: "Hanuman Mandir, Telibagh",
+        to: "Kalyan Mandapam",
+        mapUrl:
+          "https://www.google.com/maps/dir/?api=1&origin=Hanuman%20Mandir%2C%20Telibagh%2C%20Lucknow&destination=Kalyan%20Mandap%2C%20Mahanagar%2C%20Lucknow",
+        mapEmbedUrl:
+          "https://maps.google.com/maps?q=Hanuman%20Mandir%2C%20Telibagh%2C%20Lucknow&output=embed",
+      },
+      {
+        name: "Kalyan Mandapam",
+        description: "27 November · Bidai",
+        address: "Mahanagar, Lucknow",
+        mapUrl:
+          "https://www.google.com/maps/dir/?api=1&destination=Kalyan%20Mandap%20Mahanagar%20Lucknow",
+        mapEmbedUrl:
+          "https://maps.google.com/maps?q=Kalyan%20Mandapam%2C%20Mahanagar%2C%20Lucknow&output=embed",
+      },
+      {
+        name: "Purv Sainik Kalyan Nigam",
+        description: "27 November · Cocktail; 28 November · Reception",
+        address: "Lucknow",
+        mapUrl: "https://maps.app.goo.gl/9e692tqTbMVGnjTD7?g_st=aw",
+        mapEmbedUrl:
+          "https://maps.google.com/maps?q=Purv%20Sainik%20Kalyan%20Nigam%2C%20Lucknow&output=embed",
+      },
+    ],
+    countdown: {
+      targetDate: "2026-11-26T19:00:00",
+      displayDate: "26 November 2026",
+      displayTime: "Thursday · 7 PM onwards",
+    },
+    scratchCard: { date: "26 November 2026", time: "Thursday · 7 PM onwards" },
+  },
+};
+const sharedMusic = { youtubeVideoId: "u2XOyXN1Ppo", start: 33 };
+const escapeHTML = (value = "") =>
+  String(value).replace(
+    /[&<>"']/g,
+    (character) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        character
+      ],
+  );
+const querySide = new URLSearchParams(location.search).get("side");
+let activeSide = ["bride", "groom"].includes(querySide) ? querySide : "";
+let scratchReady = false;
+let scratchNeedsReset = false;
+const sidePicker = $("#sidePicker");
+const invitationPage = $("#invitationPage");
+const eventGrid = $("#eventGrid");
+const eventPrevious = $("#eventPrevious");
+const eventNext = $("#eventNext");
+const revealObserver = new IntersectionObserver(
+  (entries) =>
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) entry.target.classList.add("visible");
+    }),
+  { threshold: 0.12 },
 );
+function observeRevealElements(root) {
+  root
+    .querySelectorAll(".reveal")
+    .forEach((element) => revealObserver.observe(element));
+}
+function updateEventControls() {
+  const maxScroll = eventGrid.scrollWidth - eventGrid.clientWidth;
+  const initialOffset =
+    Number.parseFloat(getComputedStyle(eventGrid).paddingLeft) || 0;
+  eventPrevious.disabled = eventGrid.scrollLeft <= initialOffset + 1;
+  eventNext.disabled = maxScroll - eventGrid.scrollLeft <= 1;
+}
+function scrollEvents(direction) {
+  const firstCard = eventGrid.querySelector(".event-card");
+  if (!firstCard) return;
+  const gap = Number.parseFloat(getComputedStyle(eventGrid).columnGap) || 0;
+  eventGrid.scrollBy({
+    left: direction * (firstCard.getBoundingClientRect().width + gap),
+    behavior: "instant",
+  });
+}
+eventPrevious.addEventListener("click", () => scrollEvents(-1));
+eventNext.addEventListener("click", () => scrollEvents(1));
+eventGrid.addEventListener("scroll", updateEventControls, { passive: true });
+addEventListener("resize", updateEventControls);
+function showSidePicker() {
+  invitationPage.hidden = true;
+  sidePicker.hidden = false;
+  document.body.classList.add("choosing-side");
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+function renderInvitation(side) {
+  activeSide = side;
+  document.body.classList.remove("choosing-side");
+  const data = invitationData[side];
+  sidePicker.hidden = true;
+  invitationPage.hidden = false;
+  $("#switchInvitation").textContent =
+    side === "groom" ? "Checkout Bride's invite" : "Checkout Groom's invite";
+  $("#eventsIntro").textContent = data.eventsIntro;
+  eventGrid.innerHTML = data.events
+    .map((event) => {
+      const location = [event.venue, event.address]
+        .filter(Boolean)
+        .join("<br>");
+      const artwork = event.image
+        ? `<img src="${escapeHTML(event.image)}" alt="" />`
+        : "";
+      const imageSlot = artwork
+        ? `<div class="event-icon has-art${event.type === "route" ? " event-icon-route" : ""}">${artwork}</div>`
+        : '<div class="event-icon event-image-placeholder" role="img" aria-label="Image placeholder"><span>Image</span></div>';
+      const route =
+        event.type === "route"
+          ? `<div class="event-route"><span>${escapeHTML(event.from)}</span><b aria-hidden="true">↓</b><strong>BARAT</strong><b aria-hidden="true">↓</b><span>${escapeHTML(event.to)}</span></div>`
+          : "";
+      const rituals = event.rituals?.length
+        ? `<div class="rituals">${event.rituals.map((ritual) => `<div class="ritual">${escapeHTML(ritual.name)}<time>${escapeHTML(ritual.time)}</time></div>`).join("")}</div>`
+        : "";
+      return `<article class="event-card plaque reveal ${escapeHTML(event.theme || "")}${event.name === "Haldi" ? " event-haldi" : ""}" tabindex="0" aria-label="${escapeHTML(event.name)}, ${escapeHTML(event.date)}"><div class="date">${escapeHTML(event.date)}${event.time ? ` · ${escapeHTML(event.time)}` : ""}</div>${imageSlot}<div class="event-copy"><h4>${escapeHTML(event.name)}</h4>${route}${event.type !== "route" && location ? `<div class="place">${location}</div>` : ""}${event.tag ? `<div class="tag">${escapeHTML(event.tag)}</div>` : ""}${rituals}</div></article>`;
+    })
+    .join("");
+  observeRevealElements(eventGrid);
+  updateEventControls();
+  requestAnimationFrame(updateEventControls);
+  eventGrid.querySelectorAll(".event-card").forEach((card) => {
+    card.addEventListener("pointerenter", () => {
+      if (!matchMedia("(hover: hover)").matches) return;
+      const trackBounds = eventGrid.getBoundingClientRect();
+      const cardBounds = card.getBoundingClientRect();
+      const safeInset = 16;
+      let scrollDelta = 0;
+      if (cardBounds.left < trackBounds.left + safeInset) {
+        scrollDelta = cardBounds.left - trackBounds.left - safeInset;
+      } else if (cardBounds.right > trackBounds.right - safeInset) {
+        scrollDelta = cardBounds.right - trackBounds.right + safeInset;
+      }
+      if (scrollDelta)
+        eventGrid.scrollBy({ left: scrollDelta, behavior: "instant" });
+    });
+    card.addEventListener("click", (event) => {
+      if (matchMedia("(hover: hover)").matches) return;
+      if (event.target.closest("a, button")) return;
+      const wasFocused = card.classList.contains("is-focused");
+      eventGrid
+        .querySelectorAll(".event-card.is-focused")
+        .forEach((focusedCard) => focusedCard.classList.remove("is-focused"));
+      if (!wasFocused) card.classList.add("is-focused");
+    });
+  });
+  const dressSection = $("#wardrobe");
+  dressSection.hidden = !data.dressCode.enabled;
+  $(".nav a[href='#wardrobe']").hidden = !data.dressCode.enabled;
+  $("#dressList").innerHTML = data.dressCode.items
+    .map(
+      (item) =>
+        `<div class="dress"><div class="swatch ${escapeHTML(item.swatch)}"></div><div><b>${escapeHTML(item.name)}</b><span>${escapeHTML(item.palette)}</span></div><em>${escapeHTML(item.mood)}</em></div>`,
+    )
+    .join("");
+  $("#dressList")
+    .querySelectorAll(".swatch")
+    .forEach((swatch) => {
+      if (getComputedStyle(swatch).backgroundImage !== "none") {
+        swatch.classList.add("has-image");
+      }
+    });
+  $("#venueGrid").innerHTML = data.venues
+    .map((venue) => {
+      const map = venue.mapEmbedUrl
+        ? `<iframe class="map" loading="lazy" title="${escapeHTML(venue.name)} map" src="${escapeHTML(venue.mapEmbedUrl)}"></iframe>`
+        : "";
+      const route =
+        venue.type === "route"
+          ? `<div class="venue-route"><span>${escapeHTML(venue.from)}</span><b aria-hidden="true">↓</b><strong>${escapeHTML(venue.to)}</strong></div>`
+          : "";
+      const directions = venue.mapUrl
+        ? `<a class="direction" href="${escapeHTML(venue.mapUrl)}" target="_blank" rel="noopener">GET DIRECTIONS ↗</a>`
+        : "";
+      return `<article class="venue-card">${map}<div class="venue-info"><h4>${escapeHTML(venue.name)}</h4><p>${escapeHTML(venue.description)}${venue.address ? `<br>${escapeHTML(venue.address)}` : ""}</p>${route}${directions}</div></article>`;
+    })
+    .join("");
+  const contactNumber = data.contact.phone.replace(/\D/g, "");
+  $("#contactCall").href = `tel:+${contactNumber}`;
+  $("#contactWhatsapp").href =
+    `https://wa.me/${data.contact.whatsapp.replace(/\D/g, "")}`;
+  $("#phoneLink").href = `tel:+${contactNumber}`;
+  $("#countdown").dataset.targetDate = data.countdown.targetDate;
+  $("#countdown").dataset.displayDate = data.countdown.displayDate;
+  $("#countdown").dataset.displayTime = data.countdown.displayTime;
+  $("#scratch .revealed strong").textContent = data.scratchCard.date;
+  $("#scratch .revealed span").textContent = data.scratchCard.time;
+  scratchNeedsReset = true;
+  if (scratchReady) {
+    setupScratch(true);
+    scratchNeedsReset = false;
+  }
+  localStorage.setItem("invitationSide", side);
+  if (new URLSearchParams(location.search).get("side") !== side) {
+    const url = new URL(location.href);
+    url.searchParams.set("side", side);
+    history.replaceState(null, "", url);
+  }
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+if (activeSide) renderInvitation(activeSide);
+else showSidePicker();
+sidePicker
+  .querySelectorAll("[data-side]")
+  .forEach((button) =>
+    button.addEventListener("click", () =>
+      renderInvitation(button.dataset.side),
+    ),
+  );
 document.querySelectorAll(".dress .swatch").forEach((swatch) => {
   const image = getComputedStyle(swatch).backgroundImage;
   if (image && image !== "none") swatch.classList.add("has-image");
 });
-document.querySelector("#rsvp")?.remove();
-document.querySelector('.nav a[href="#rsvp"]')?.remove();
-const contactNumber = RSVP_WHATSAPP_NUMBER.replace(/\D/g, "");
+const contactNumber = invitationData[
+  activeSide || "bride"
+].contact.phone.replace(/\D/g, "");
 const contactCall = $("#contactCall");
 const contactWhatsapp = $("#contactWhatsapp");
 if (contactCall) contactCall.href = `tel:+${contactNumber}`;
@@ -99,6 +430,12 @@ oldFamily.remove();
 const cover = $("#cover");
 const menu = $("#nav");
 const menuButton = $("#menuButton");
+$("#switchInvitation").addEventListener("click", () => {
+  menu.classList.remove("open");
+  menuButton.setAttribute("aria-expanded", "false");
+  menuButton.textContent = "☰";
+  renderInvitation(activeSide === "groom" ? "bride" : "groom");
+});
 
 menuButton.addEventListener("click", () => {
   const open = menu.classList.toggle("open");
@@ -137,8 +474,9 @@ addEventListener("scroll", () => {
   $("#progress").style.width = `${progress}%`;
 });
 
-const weddingDate = new Date(2026, 10, 26, 19, 0, 0);
 function updateCountdown() {
+  if (!activeSide) return;
+  const weddingDate = new Date($("#countdown").dataset.targetDate);
   const remaining = Math.max(0, weddingDate - Date.now());
   const values = [
     Math.floor(remaining / 864e5),
@@ -157,7 +495,17 @@ const canvas = $("#scratchCanvas");
 const scratchBox = $("#scratch");
 const context = canvas.getContext("2d", { willReadFrequently: true });
 let cardCleared = false;
-function setupScratch() {
+let scratching = false;
+let lastPoint = null;
+let lastProgressCheck = 0;
+function setupScratch(reset = false) {
+  if (reset) {
+    cardCleared = false;
+    scratching = false;
+    lastPoint = null;
+    lastProgressCheck = 0;
+    scratchBox.classList.remove("is-cleared", "is-scratching");
+  }
   if (cardCleared) return;
   const bounds = canvas.getBoundingClientRect();
   const scale = devicePixelRatio || 1;
@@ -220,13 +568,12 @@ function setupScratch() {
   context.lineJoin = "round";
   context.lineWidth = 46;
 }
-setupScratch();
+scratchReady = true;
+setupScratch(scratchNeedsReset);
+scratchNeedsReset = false;
 document.fonts?.ready.then(() => {
   if (!scratchBox.classList.contains("is-scratching")) setupScratch();
 });
-let scratching = false;
-let lastPoint = null;
-let lastProgressCheck = 0;
 function showScratchConfetti() {
   const viewportWidth = document.documentElement.clientWidth;
   const viewportHeight = document.documentElement.clientHeight;
@@ -352,16 +699,7 @@ canvas.addEventListener("pointercancel", () => {
 });
 addEventListener("resize", setupScratch);
 
-const observer = new IntersectionObserver(
-  (entries) =>
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add("visible");
-    }),
-  { threshold: 0.12 },
-);
-document
-  .querySelectorAll(".reveal")
-  .forEach((element) => observer.observe(element));
+observeRevealElements(document);
 
 const calendar = [
   "BEGIN:VCALENDAR",
@@ -393,7 +731,11 @@ rsvpForm?.addEventListener("submit", (event) => {
   status.className = "status success";
   status.textContent = `Thank you, ${name}. Your RSVP is ready.`;
   const message = `Hello, I am ${name}. I will attend Ishani and Subhanshu's wedding with ${people}.`;
-  const whatsappUrl = `https://wa.me/${RSVP_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  const whatsappNumber = invitationData[activeSide].contact.whatsapp.replace(
+    /\D/g,
+    "",
+  );
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, "_blank", "noopener");
 });
 
