@@ -108,7 +108,7 @@ const invitationData = {
   },
   groom: {
     eventsIntro: "Seven celebrations, one beautiful celebration",
-    contact: { phone: "+919116812724", whatsapp: "+919116812724" },
+    contact: { phone: "+918299271155", whatsapp: "+918299271155" },
     events: [
       {
         name: "Nani Mukh Puja",
