@@ -525,31 +525,36 @@ function updateHeroDisplay(side = activeSide || "bride") {
 const cover = $("#cover");
 const menu = $("#nav");
 const menuButton = $("#menuButton");
+function setMenuOpen(open) {
+  menu.classList.toggle("open", open);
+  menuButton.setAttribute("aria-expanded", open);
+  menuButton.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+}
+function updateMenuVisibility() {
+  const visible = window.scrollY > 32;
+  menuButton.classList.toggle("is-visible", visible);
+  if (!visible && menu.classList.contains("open")) {
+    setMenuOpen(false);
+  }
+}
+updateMenuVisibility();
 $("#switchInvitation").addEventListener("click", () => {
-  menu.classList.remove("open");
-  menuButton.setAttribute("aria-expanded", "false");
-  menuButton.textContent = "☰";
+  setMenuOpen(false);
   renderInvitation(activeSide === "groom" ? "bride" : "groom");
 });
 
 menuButton.addEventListener("click", () => {
-  const open = menu.classList.toggle("open");
-  menuButton.setAttribute("aria-expanded", open);
-  menuButton.textContent = open ? "×" : "☰";
+  setMenuOpen(!menu.classList.contains("open"));
 });
 
 document.querySelectorAll(".nav a").forEach((link) =>
   link.addEventListener("click", () => {
-    menu.classList.remove("open");
-    menuButton.setAttribute("aria-expanded", "false");
-    menuButton.textContent = "☰";
+    setMenuOpen(false);
   }),
 );
 
 $("#creatorNav").addEventListener("click", () => {
-  menu.classList.remove("open");
-  menuButton.setAttribute("aria-expanded", "false");
-  menuButton.textContent = "☰";
+  setMenuOpen(false);
   openCreatorDialog(menuButton);
 });
 
@@ -583,6 +588,7 @@ for (let i = 0; i < 20; i += 1) {
 }
 
 addEventListener("scroll", () => {
+  updateMenuVisibility();
   const progress =
     (scrollY / (document.documentElement.scrollHeight - innerHeight)) * 100;
   $("#progress").style.width = `${progress}%`;
