@@ -420,6 +420,73 @@ if (contactCall) contactCall.href = `tel:+${contactNumber}`;
 if (contactWhatsapp) {
   contactWhatsapp.href = `https://wa.me/${contactNumber}`;
 }
+const upiId = "2043shivam@okaxis";
+const upiPaymentLink = `upi://pay?${new URLSearchParams({
+  pa: upiId,
+  pn: "Shivam Sharma",
+  cu: "INR",
+})
+  .toString()
+  .replace(/\+/g, "%20")}`;
+const upiPayLink = $("#upiPayLink");
+const upiQrLink = $("#upiQrLink");
+const upiStatus = $("#upiStatus");
+upiPayLink.href = upiPaymentLink;
+upiQrLink.href = upiPaymentLink;
+try {
+  const upiQrCode = qrcode(0, "M");
+  upiQrCode.addData(upiPaymentLink);
+  upiQrCode.make();
+  $("#upiQr").src = upiQrCode.createDataURL(6, 4);
+} catch (error) {
+  console.error("Could not generate the UPI payment QR code.", error);
+  upiStatus.textContent =
+    "The QR code could not be displayed. Use the UPI payment button or copy the UPI ID.";
+  upiStatus.hidden = false;
+}
+
+const creatorTrigger = $("#creatorTrigger");
+const creatorDialog = $("#creatorDialog");
+const closeCreatorDialog = $("#closeCreatorDialog");
+let creatorDialogReturnFocus = creatorTrigger;
+function openCreatorDialog(returnFocusTo = creatorTrigger) {
+  creatorDialogReturnFocus = returnFocusTo;
+  creatorDialog.showModal();
+}
+creatorTrigger.addEventListener("click", () => openCreatorDialog());
+closeCreatorDialog.addEventListener("click", () => creatorDialog.close());
+creatorDialog.addEventListener("click", (event) => {
+  if (event.target === creatorDialog) creatorDialog.close();
+});
+creatorDialog.addEventListener("close", () => creatorDialogReturnFocus.focus());
+
+const upiQrDisclosure = $("#upiQrDisclosure");
+const mobileViewport = window.matchMedia("(max-width: 699px)");
+const updateQrDisclosure = (event) => {
+  upiQrDisclosure.open = !event.matches;
+};
+updateQrDisclosure(mobileViewport);
+if (mobileViewport.addEventListener) {
+  mobileViewport.addEventListener("change", updateQrDisclosure);
+} else {
+  mobileViewport.addListener(updateQrDisclosure);
+}
+
+$("#copyUpiId").addEventListener("click", async () => {
+  try {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      throw new Error("Clipboard access is unavailable.");
+    }
+    await navigator.clipboard.writeText(upiId);
+    upiStatus.textContent = "UPI ID copied.";
+    upiStatus.hidden = false;
+  } catch (error) {
+    console.error("Could not copy the UPI ID.", error);
+    upiStatus.textContent =
+      "Copy is unavailable here. You can select and copy the UPI ID above.";
+    upiStatus.hidden = false;
+  }
+});
 function updateInvitationNames(side = activeSide || "bride") {
   const order = side === "groom" ? "Subhanshu & Ishani" : "Ishani & Subhanshu";
   const coverName = document.querySelector(".cover .names");
@@ -478,6 +545,13 @@ document.querySelectorAll(".nav a").forEach((link) =>
     menuButton.textContent = "☰";
   }),
 );
+
+$("#creatorNav").addEventListener("click", () => {
+  menu.classList.remove("open");
+  menuButton.setAttribute("aria-expanded", "false");
+  menuButton.textContent = "☰";
+  openCreatorDialog(menuButton);
+});
 
 $("#openInvite").addEventListener("click", () => {
   cover.classList.add("hide-cover");

@@ -86,6 +86,15 @@
       <a href="#wardrobe">Dress Code</a>
       <a href="#venue">Find Us</a>
       <a href="#contact">Contact Us</a>
+      <button
+        class="nav-creator"
+        id="creatorNav"
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls="creatorDialog"
+      >
+        Contact the creator
+      </button>
       <button class="nav-switch" id="switchInvitation" type="button">
         Switch Invitation
       </button>
@@ -300,17 +309,91 @@
           <a href="tel:+917347825755" id="phoneLink">Call us</a>
         </div>
         <p class="creator-credit">
-          Made with ❤️ <br /><a
-            href="https://www.linkedin.com/in/shivamsharma2043/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Shivam Sharma</a
+          Made with ❤️ <br /><button
+            class="creator-trigger"
+            id="creatorTrigger"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="creatorDialog"
           >
+            Shivam Sharma
+          </button>
         </p>
       </footer>
     </main>
+    <dialog
+      class="creator-dialog"
+      id="creatorDialog"
+      aria-labelledby="creatorDialogTitle"
+    >
+      <div class="creator-dialog-inner">
+        <button
+          class="creator-dialog-close"
+          id="closeCreatorDialog"
+          type="button"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <div class="creator-dialog-header">
+          <img
+            class="creator-photo"
+            src="src/images/Shivam%20Sharma.png"
+            alt="Shivam Sharma"
+            width="88"
+            height="88"
+          />
+          <div class="creator-dialog-heading">
+            <div class="small-caps">A note from the creator</div>
+            <h2 id="creatorDialogTitle">Like my work?</h2>
+          </div>
+        </div>
+        <p class="creator-dialog-intro">I’d love to hear from you.</p>
+        <p class="creator-email">
+          Reach me at
+          <a href="mailto:reach.shivamsharma@gmail.com"
+            >reach.shivamsharma@gmail.com</a
+          >
+        </p>
+        <section class="creator-support" aria-labelledby="supportTitle">
+          <h3 id="supportTitle">Support my work</h3>
+          <p>Enjoyed this invitation? Buy me a coffee.</p>
+          <div class="support-layout">
+            <div class="support-actions">
+              <a class="upi-pay-action" id="upiPayLink" href="#">
+                Pay with UPI
+              </a>
+              <p class="upi-hint">
+                Opens a compatible UPI app. Choose an amount and confirm there.
+              </p>
+              <div class="upi-id-row">
+                <span>UPI ID</span>
+                <code id="upiId">2043shivam@okaxis</code>
+                <button
+                  class="upi-copy-action"
+                  id="copyUpiId"
+                  type="button"
+                  aria-label="Copy UPI ID"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+            <details class="upi-qr-disclosure" id="upiQrDisclosure">
+              <summary>Pay from another device? View QR</summary>
+              <a class="upi-qr-link" id="upiQrLink" href="#">
+                <img id="upiQr" alt="UPI payment QR for Shivam Sharma" />
+              </a>
+              <p class="upi-qr-caption">Scan with any UPI app</p>
+            </details>
+          </div>
+          <p class="upi-status" id="upiStatus" role="status" hidden></p>
+        </section>
+      </div>
+    </dialog>
     <div id="youtube-player" aria-hidden="true"></div>
     <button class="music" id="music" aria-label="Toggle music">♫</button>
+    <script src="src/vendor/qrcode.js"></script>
     <script src="src/script.js"></script>
   </body>
 </html>

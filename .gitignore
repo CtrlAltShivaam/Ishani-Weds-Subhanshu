@@ -1,4 +1,6 @@
 .claude/
+.sf/
+node_modules/
 frames/
 *.mp4
 *.pdf
